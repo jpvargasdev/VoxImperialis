@@ -16,6 +16,7 @@ type AppConfig struct {
 	AllowedUsers    []string
 	AllowedServices []string
 	TLSSkipVerify   bool
+	StartTLS        bool
 }
 
 var appConfig AppConfig
@@ -34,6 +35,7 @@ func Load() {
 		AllowedUsers:    splitList(mustEnv("ALLOWED_USERS")),
 		AllowedServices: splitList(getEnv("ALLOWED_SERVICES", "nginx,caddy,tailscaled")),
 		TLSSkipVerify:   getEnv("XMPP_TLS_SKIP_VERIFY", "false") == "true",
+		StartTLS:        getEnv("XMPP_START_TLS", "true") == "true",
 	}
 
 	if len(appConfig.AllowedUsers) == 0 {
