@@ -10,13 +10,14 @@ import (
 
 // AppConfig holds all runtime configuration for Vox Imperialis.
 type AppConfig struct {
-	JID             string
-	Password        string
-	Server          string
-	AllowedUsers    []string
-	AllowedServices []string
-	TLSSkipVerify   bool
-	StartTLS        bool
+	JID                          string
+	Password                     string
+	Server                       string
+	AllowedUsers                 []string
+	AllowedServices              []string
+	TLSSkipVerify                bool
+	StartTLS                     bool
+	InsecureAllowUnencryptedAuth bool
 }
 
 var appConfig AppConfig
@@ -29,13 +30,14 @@ func Load() {
 	}
 
 	appConfig = AppConfig{
-		JID:             mustEnv("XMPP_JID"),
-		Password:        mustEnv("XMPP_PASSWORD"),
-		Server:          mustEnv("XMPP_SERVER"),
-		AllowedUsers:    splitList(mustEnv("ALLOWED_USERS")),
-		AllowedServices: splitList(getEnv("ALLOWED_SERVICES", "nginx,caddy,tailscaled")),
-		TLSSkipVerify:   getEnv("XMPP_TLS_SKIP_VERIFY", "false") == "true",
-		StartTLS:        getEnv("XMPP_START_TLS", "true") == "true",
+		JID:                          mustEnv("XMPP_JID"),
+		Password:                     mustEnv("XMPP_PASSWORD"),
+		Server:                       mustEnv("XMPP_SERVER"),
+		AllowedUsers:                 splitList(mustEnv("ALLOWED_USERS")),
+		AllowedServices:              splitList(getEnv("ALLOWED_SERVICES", "nginx,caddy,tailscaled")),
+		TLSSkipVerify:                getEnv("XMPP_TLS_SKIP_VERIFY", "false") == "true",
+		StartTLS:                     getEnv("XMPP_START_TLS", "true") == "true",
+		InsecureAllowUnencryptedAuth: getEnv("XMPP_INSECURE_ALLOW_UNENCRYPTED_AUTH", "false") == "true",
 	}
 
 	if len(appConfig.AllowedUsers) == 0 {

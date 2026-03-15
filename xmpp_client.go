@@ -50,16 +50,17 @@ func (c *XMPPClient) runSession(ctx context.Context) error {
 	}
 
 	opts := xmpp.Options{
-		Host:          ensurePort(c.cfg.Server),
-		User:          c.cfg.JID,
-		Password:      c.cfg.Password,
-		NoTLS:         true,
-		StartTLS:      c.cfg.StartTLS,
-		TLSConfig:     tlsCfg,
-		Debug:         false,
-		Session:       false,
-		Status:        "xa",
-		StatusMessage: "Vox Imperialis online",
+		Host:                         ensurePort(c.cfg.Server),
+		User:                         c.cfg.JID,
+		Password:                     c.cfg.Password,
+		NoTLS:                        true,
+		StartTLS:                     c.cfg.StartTLS,
+		TLSConfig:                    tlsCfg,
+		InsecureAllowUnencryptedAuth: c.cfg.InsecureAllowUnencryptedAuth,
+		Debug:                        false,
+		Session:                      false,
+		Status:                       "xa",
+		StatusMessage:                "Vox Imperialis online",
 	}
 
 	client, err := opts.NewClient()
