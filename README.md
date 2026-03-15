@@ -54,6 +54,37 @@ go build -o vox-imperialis .
 
 ---
 
+## Docker deployment (with Prosody)
+
+VoxImperialis is deployed alongside a Prosody XMPP server via Docker Compose,
+with Traefik handling TCP routing for XMPP ports.
+
+### Register XMPP users in Prosody
+
+After the Prosody container is running, create the bot account and any
+authorised user accounts:
+
+```sh
+# Create the bot account
+podman exec prosody prosodyctl adduser vox-imperialis@vox.example.com
+# You will be prompted for a password
+
+# Create an authorised user account
+podman exec prosody prosodyctl adduser operator@vox.example.com
+```
+
+Then set the matching credentials in the VoxImperialis environment:
+
+```
+XMPP_JID=vox-imperialis@vox.example.com
+XMPP_PASSWORD=<password-set-above>
+XMPP_SERVER=vox.example.com:5222
+ALLOWED_USERS=operator@vox.example.com
+ALLOWED_SERVICES=myservice
+```
+
+---
+
 ## Commands
 
 | Command | Description |

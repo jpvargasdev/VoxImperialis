@@ -53,7 +53,7 @@ func (c *XMPPClient) runSession(ctx context.Context) error {
 		Host:          ensurePort(c.cfg.Server),
 		User:          c.cfg.JID,
 		Password:      c.cfg.Password,
-		NoTLS:         false,
+		NoTLS:         true,
 		StartTLS:      true,
 		TLSConfig:     tlsCfg,
 		Debug:         false,
