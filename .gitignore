@@ -1,0 +1,14 @@
+# built binary
+vox-imperialis
+
+# runtime config — never commit secrets
+.env
+
+# macOS
+.DS_Store
+
+# Go tool cache
+vendor/
+
+# Air
+tmp/

@@ -1,0 +1,35 @@
+[Unit]
+Description=Vox Imperialis XMPP Operations Bot
+Documentation=https://github.com/yourname/vox-imperialis
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=vox-imperialis
+Group=vox-imperialis
+WorkingDirectory=/opt/vox-imperialis
+
+# Reads XMPP_JID, XMPP_PASSWORD, etc. from this file.
+# Permissions should be 600 owned by vox-imperialis.
+EnvironmentFile=/opt/vox-imperialis/.env
+
+ExecStart=/opt/vox-imperialis/vox-imperialis
+
+Restart=always
+RestartSec=10s
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=vox-imperialis
+
+# Hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+# Allow reading /proc for system metrics
+ReadOnlyPaths=/proc
+
+[Install]
+WantedBy=multi-user.target
