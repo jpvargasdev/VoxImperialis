@@ -37,8 +37,8 @@ func Load() {
 		AllowedUsers:                 splitList(mustEnv("ALLOWED_USERS")),
 		AllowedServices:              splitList(getEnv("ALLOWED_SERVICES", "nginx,caddy,tailscaled")),
 		TLSSkipVerify:                getEnv("XMPP_TLS_SKIP_VERIFY", "false") == "true",
-		StartTLS:                     getEnv("XMPP_START_TLS", "true") == "false",
-		InsecureAllowUnencryptedAuth: getEnv("XMPP_INSECURE_ALLOW_UNENCRYPTED_AUTH", "false") == "false",
+		StartTLS:                     getEnv("XMPP_START_TLS", "true") == "true",
+		InsecureAllowUnencryptedAuth: getEnv("XMPP_INSECURE_ALLOW_UNENCRYPTED_AUTH", "false") == "true",
 		MachinusCronusURL:            getEnv("MACHINUS_CRONUS_URL", "http://localhost:8081"),
 	}
 
