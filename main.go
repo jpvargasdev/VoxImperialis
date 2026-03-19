@@ -38,6 +38,14 @@ func main() {
 		}
 	}()
 
+	// Start the HTTP notify server for receiving callbacks from other services
+	notifySrv := NewNotifyServer(client, cfg.NotifyPort)
+	go func() {
+		if err := notifySrv.Start(); err != nil {
+			log.Printf("notify: HTTP server failed: %v", err)
+		}
+	}()
+
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 

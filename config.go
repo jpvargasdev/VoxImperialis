@@ -19,6 +19,7 @@ type AppConfig struct {
 	StartTLS                     bool
 	InsecureAllowUnencryptedAuth bool
 	MachinusCronusURL            string
+	NotifyPort                   string
 }
 
 var appConfig AppConfig
@@ -40,6 +41,7 @@ func Load() {
 		StartTLS:                     getEnv("XMPP_START_TLS", "true") == "true",
 		InsecureAllowUnencryptedAuth: getEnv("XMPP_INSECURE_ALLOW_UNENCRYPTED_AUTH", "false") == "true",
 		MachinusCronusURL:            getEnv("MACHINUS_CRONUS_URL", "http://localhost:8081"),
+		NotifyPort:                   getEnv("NOTIFY_PORT", "8082"),
 	}
 
 	if len(appConfig.AllowedUsers) == 0 {

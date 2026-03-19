@@ -3,8 +3,10 @@ package main
 import (
 	"context"
 	"crypto/tls"
+	"fmt"
 	"log"
 	"strings"
+	"sync"
 	"time"
 
 	xmpp "github.com/xmppo/go-xmpp"
@@ -14,11 +16,33 @@ import (
 type XMPPClient struct {
 	cfg        AppConfig
 	dispatcher *Dispatcher
+
+	mu     sync.Mutex
+	client *xmpp.Client
 }
 
 // NewXMPPClient creates an XMPPClient with the given config and dispatcher.
 func NewXMPPClient(cfg AppConfig, d *Dispatcher) *XMPPClient {
 	return &XMPPClient{cfg: cfg, dispatcher: d}
+}
+
+// SendToAllowed sends a message to all allowed users.
+func (c *XMPPClient) SendToAllowed(text string) error {
+	c.mu.Lock()
+	cl := c.client
+	c.mu.Unlock()
+
+	if cl == nil {
+		return fmt.Errorf("xmpp: not connected")
+	}
+
+	for _, jid := range c.cfg.AllowedUsers {
+		msg := xmpp.Chat{Remote: strings.TrimSpace(jid), Type: "chat", Text: text}
+		if _, err := cl.Send(msg); err != nil {
+			log.Printf("xmpp: failed to send to %s: %v", jid, err)
+		}
+	}
+	return nil
 }
 
 // Connect establishes (and re-establishes) the XMPP connection until ctx is cancelled.
@@ -67,7 +91,18 @@ func (c *XMPPClient) runSession(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	defer client.Close()
+
+	// Store the active client so SendToAllowed can use it
+	c.mu.Lock()
+	c.client = client
+	c.mu.Unlock()
+
+	defer func() {
+		c.mu.Lock()
+		c.client = nil
+		c.mu.Unlock()
+		client.Close()
+	}()
 
 	log.Printf("xmpp: connected as %s", c.cfg.JID)
 
